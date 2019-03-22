@@ -8,7 +8,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -44,8 +43,7 @@ public class Robot2018 extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		camera = CameraServer.getInstance();
-		camera.startAutomaticCapture(0);           //originally ("cam0"), changed to int
+		CameraServer.getInstance().startAutomaticCapture();
 		hatch = new Servo(0);
 		leftFront = new WPI_VictorSPX(1);
 		leftBack = new WPI_VictorSPX(2);
