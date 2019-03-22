@@ -11,6 +11,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
@@ -25,7 +26,7 @@ import edu.wpi.first.wpilibj.Timer;
  * directory.
  */
 public class Robot2018 extends TimedRobot {
-	//private CameraServer camera;
+	private CameraServer camera;
 
 	//private WPI_VictorSPX arm;
 	private WPI_VictorSPX	leftFront, leftBack, rightFront, rightBack;
@@ -33,7 +34,9 @@ public class Robot2018 extends TimedRobot {
 	private DifferentialDrive differentialDrive;
 	private Joystick joystick;
 	private Timer m_timer = new Timer();
-	private Servo leftClaw, rightClaw, poker;
+	private Servo hatch;
+	private Boolean hatchIssHeld = false;
+	private Boolean hatchIsReleased = false;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -41,9 +44,9 @@ public class Robot2018 extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		//camera = CameraServer.getInstance();
-		//camera.startAutomaticCapture(0);           //originally ("cam0"), changed to int
-		//arm = new WPI_VictorSPX(5);
+		camera = CameraServer.getInstance();
+		camera.startAutomaticCapture(0);           //originally ("cam0"), changed to int
+		hatch = new Servo(0);
 		leftFront = new WPI_VictorSPX(1);
 		leftBack = new WPI_VictorSPX(2);
 		rightFront = new WPI_VictorSPX(3);
@@ -51,19 +54,8 @@ public class Robot2018 extends TimedRobot {
 		
 		leftDrive = new SpeedControllerGroup(leftFront, leftBack);
 		rightDrive = new SpeedControllerGroup(rightFront, rightBack);
-		
 		differentialDrive = new DifferentialDrive(leftDrive, rightDrive);
-		
-		// servos
-		// 6 = PWN0
-		// 7 = PWM1
-		// 8? = PWM2
-		leftClaw = new Servo(1);
-		rightClaw = new Servo(0);
-		//poker = new Servo(2); //valid range is 0.25 - 0.99
-
 		joystick = new Joystick(0);
-		
 	}
 
 	  /**
@@ -85,6 +77,7 @@ public class Robot2018 extends TimedRobot {
 	public void autonomousInit() {
 		m_timer.reset();
 		m_timer.start();
+		holdHatch();
 	}
 
 	/**
@@ -92,6 +85,7 @@ public class Robot2018 extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		differentialDrive.arcadeDrive(joystick.getY(), -joystick.getX());
 		// Drive for 2 seconds
 		if (m_timer.get() < 2.0) {
 		//	differentialDrive.arcadeDrive(-0.65, 0.0); // drive forwards half speed
@@ -105,58 +99,35 @@ public class Robot2018 extends TimedRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		openClaw();
+		holdHatch();
 	}
 
 	
-	Boolean isClosed = false;
-	Boolean isOpen = false;
 	/**
 	 * This function is called periodically during teleoperated mode.
 	 */
 	@Override
 	public void teleopPeriodic() {
 		differentialDrive.arcadeDrive(joystick.getY(), -joystick.getX());
-		Boolean close = joystick.getRawButton(1);
-		Boolean open = joystick.getRawButton(2);
-		Boolean push = joystick.getRawButton(7);
-		if (close && !isClosed)
+		Boolean holdHatch = joystick.getRawButton(3);
+		Boolean releaseHatch = joystick.getRawButton(1);
+		if (holdHatch && !hatchIssHeld)
 		{
-			closeClaw();
+			holdHatch();
 		}
-		else if(open && !isOpen)
+		else if(releaseHatch && !hatchIsReleased)
 		{
-			openClaw();
+			releaseHatch();
 		}
 	}
 
-	private void raiseArm()
+	private void holdHatch()
 	{
-		//arm.set(0.20);
+		hatch.set(1);
 	}
-	private void lowerArm()
+	private void releaseHatch()
 	{
-		//arm.set(-0.05);
-	}
-	private void holdArm()
-	{
-		//arm.set(0.05);		
-	}
-	
-	private void closeClaw()
-	{
-		leftClaw.set(0.45); // 0 = close
-		rightClaw.set(0.47); //1 = close
-		isOpen = false;
-		isClosed = true;
-	}
-
-	private void openClaw()
-	{
-		leftClaw.set(0.73); // 1 = open
-		rightClaw.set(0.23); // 0 = open
-		isOpen = true;
-		isClosed = false;
+		hatch.set(0);
 	}
 
 	/**
