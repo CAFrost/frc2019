@@ -8,6 +8,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Joystick;
@@ -26,7 +28,7 @@ public class Robot2018 extends TimedRobot {
 	//private CameraServer camera;
 
 	//private WPI_VictorSPX arm;
-	//private WPI_VictorSPX leftFront, leftBack, rightFront, rightBack;
+	private WPI_VictorSPX	leftFront, leftBack, rightFront, rightBack;
 	private SpeedControllerGroup leftDrive, rightDrive;
 	private DifferentialDrive differentialDrive;
 	private Joystick joystick;
@@ -42,15 +44,15 @@ public class Robot2018 extends TimedRobot {
 		//camera = CameraServer.getInstance();
 		//camera.startAutomaticCapture(0);           //originally ("cam0"), changed to int
 		//arm = new WPI_VictorSPX(5);
-		//leftFront = new WPI_VictorSPX(2);
-		//leftBack = new WPI_VictorSPX(1);
-		//rightFront = new WPI_VictorSPX(3);
-		//rightBack = new WPI_VictorSPX(4);
+		leftFront = new WPI_VictorSPX(1);
+		leftBack = new WPI_VictorSPX(2);
+		rightFront = new WPI_VictorSPX(3);
+		rightBack = new WPI_VictorSPX(4);
 		
-		//leftDrive = new SpeedControllerGroup(leftFront, leftBack);
-		//rightDrive = new SpeedControllerGroup(rightFront, rightBack);
+		leftDrive = new SpeedControllerGroup(leftFront, leftBack);
+		rightDrive = new SpeedControllerGroup(rightFront, rightBack);
 		
-		//differentialDrive = new DifferentialDrive(leftDrive, rightDrive);
+		differentialDrive = new DifferentialDrive(leftDrive, rightDrive);
 		
 		// servos
 		// 6 = PWN0
@@ -92,9 +94,9 @@ public class Robot2018 extends TimedRobot {
 	public void autonomousPeriodic() {
 		// Drive for 2 seconds
 		if (m_timer.get() < 2.0) {
-			differentialDrive.arcadeDrive(-0.65, 0.0); // drive forwards half speed
+		//	differentialDrive.arcadeDrive(-0.65, 0.0); // drive forwards half speed
 		} else {
-			differentialDrive.stopMotor(); // stop robot
+		//	differentialDrive.stopMotor(); // stop robot
 		}
 	}
 
@@ -125,27 +127,6 @@ public class Robot2018 extends TimedRobot {
 		else if(open && !isOpen)
 		{
 			openClaw();
-		}
-		if (push)
-		{
-			//poker.set(0.90);
-		}
-		else
-		{
-			//poker.set(0.25);
-		}
-		int povValue = joystick.getPOV(); // -1 for no input, 0 for up, 90 for right, 180 for down, and 270 for left.
-		if (povValue == 0)
-		{
-			lowerArm();
-		}
-		else if (povValue == 180)
-		{
-			raiseArm();
-		}
-		else
-		{
-			holdArm();
 		}
 	}
 
