@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Robot2018 extends TimedRobot {
-	private WPI_VictorSPX	leftFront, leftBack, rightFront, rightBack;
+	private WPI_VictorSPX leftFront, leftBack, rightFront, rightBack;
 	private SpeedControllerGroup leftDrive, rightDrive;
 	private DifferentialDrive differentialDrive;
 	private Joystick joystick;
@@ -100,6 +100,16 @@ public class Robot2018 extends TimedRobot {
 		}
 	}
 
+	/**
+	 * This function is called periodically during test mode.
+	 */
+	@Override
+	public void testPeriodic() {
+	}
+
+	/**
+	 * Private functions
+	 */
 	private void holdHatch()
 	{
 		hatch.set(1);
@@ -107,12 +117,5 @@ public class Robot2018 extends TimedRobot {
 	private void releaseHatch()
 	{
 		hatch.set(0);
-	}
-
-	/**
-	 * This function is called periodically during test mode.
-	 */
-	@Override
-	public void testPeriodic() {
 	}
 }
