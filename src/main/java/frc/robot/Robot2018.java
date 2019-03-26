@@ -4,11 +4,8 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
-
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -18,17 +15,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
 public class Robot2018 extends TimedRobot {
-	private CameraServer camera;
-
-	//private WPI_VictorSPX arm;
 	private WPI_VictorSPX	leftFront, leftBack, rightFront, rightBack;
 	private SpeedControllerGroup leftDrive, rightDrive;
 	private DifferentialDrive differentialDrive;
@@ -44,8 +31,7 @@ public class Robot2018 extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		camera = CameraServer.getInstance();
-		camera.startAutomaticCapture();           //originally ("cam0"), changed to int
+		CameraServer.getInstance().startAutomaticCapture();
 		hatch = new Servo(0);
 		leftFront = new WPI_VictorSPX(1);
 		leftBack = new WPI_VictorSPX(2);
@@ -58,7 +44,7 @@ public class Robot2018 extends TimedRobot {
 		joystick = new Joystick(0);
 	}
 
-	  /**
+  /**
    * This function is called every robot packet, no matter the mode. Use
    * this for items like diagnostics that you want ran during disabled,
    * autonomous, teleoperated and test.
@@ -70,7 +56,7 @@ public class Robot2018 extends TimedRobot {
   public void robotPeriodic() {
   }
 
-/**
+	/**
 	 * This function is run once each time the robot enters autonomous mode.
 	 */
 	@Override
@@ -86,12 +72,6 @@ public class Robot2018 extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		differentialDrive.arcadeDrive(joystick.getY(), -joystick.getX());
-		// Drive for 2 seconds
-		if (m_timer.get() < 2.0) {
-		//	differentialDrive.arcadeDrive(-0.65, 0.0); // drive forwards half speed
-		} else {
-		//	differentialDrive.stopMotor(); // stop robot
-		}
 	}
 
 	/**
@@ -101,7 +81,6 @@ public class Robot2018 extends TimedRobot {
 	public void teleopInit() {
 		holdHatch();
 	}
-
 	
 	/**
 	 * This function is called periodically during teleoperated mode.
