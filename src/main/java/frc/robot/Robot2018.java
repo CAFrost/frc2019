@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Robot2018 extends TimedRobot {
-	private WPI_VictorSPX leftFront, leftBack, rightFront, rightBack;
+	private WPI_VictorSPX leftFront, leftBack, rightFront, rightBack, lift;
 	private SpeedControllerGroup leftDrive, rightDrive;
 	private DifferentialDrive differentialDrive;
 	private Joystick joystick;
@@ -37,6 +37,7 @@ public class Robot2018 extends TimedRobot {
 		leftBack = new WPI_VictorSPX(2);
 		rightFront = new WPI_VictorSPX(3);
 		rightBack = new WPI_VictorSPX(4);
+		lift = new WPI_VictorSPX(5);
 		
 		leftDrive = new SpeedControllerGroup(leftFront, leftBack);
 		rightDrive = new SpeedControllerGroup(rightFront, rightBack);
@@ -90,6 +91,8 @@ public class Robot2018 extends TimedRobot {
 		differentialDrive.arcadeDrive(joystick.getY(), -joystick.getX());
 		Boolean holdHatch = joystick.getRawButton(3);
 		Boolean releaseHatch = joystick.getRawButton(1);
+		Boolean liftRobot = joystick.getRawButton(6);
+		Boolean lowerRobot = joystick.getRawButton(4);
 		if (holdHatch && !hatchIssHeld)
 		{
 			holdHatch();
@@ -97,6 +100,18 @@ public class Robot2018 extends TimedRobot {
 		else if(releaseHatch && !hatchIsReleased)
 		{
 			releaseHatch();
+		}
+		if (liftRobot)
+		{
+			//lift.set(1.5);
+		} 
+		else if (lowerRobot)
+		{
+			//lift.set(-0.5);
+		}
+		else
+		{
+			lift.set(0);
 		}
 	}
 
@@ -112,10 +127,10 @@ public class Robot2018 extends TimedRobot {
 	 */
 	private void holdHatch()
 	{
-		hatch.set(1);
+		hatch.set(0);
 	}
 	private void releaseHatch()
 	{
-		hatch.set(0);
+		hatch.set(1);
 	}
 }
