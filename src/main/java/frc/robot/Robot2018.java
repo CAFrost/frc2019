@@ -73,6 +73,7 @@ public class Robot2018 extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		differentialDrive.arcadeDrive(joystick.getY(), -joystick.getX());
+		lift.set(0.1);
 	}
 
 	/**
@@ -103,11 +104,11 @@ public class Robot2018 extends TimedRobot {
 		}
 		if (liftRobot)
 		{
-			//lift.set(1.5);
+			lift.set(-5);
 		} 
 		else if (lowerRobot)
 		{
-			//lift.set(-0.5);
+			lift.set(0.5);
 		}
 		else
 		{
@@ -131,6 +132,6 @@ public class Robot2018 extends TimedRobot {
 	}
 	private void releaseHatch()
 	{
-		hatch.set(1);
+		hatch.set(0.6);
 	}
 }
